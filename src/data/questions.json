@@ -1,0 +1,447 @@
+{
+  "Questions": [
+    {
+      "Diagnostic Marketing Digital": [
+        {
+          "id": "1",
+          "question": "Est-ce que vous faites de la publicité, promotion commerciale, la vente personnelle, les relations publiques et le marketing direct ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "2",
+          "question": "Avez-vous choisi le nom de coopérative qui est facile à mémoriser dans l’esprit des consommateurs ?",
+          "options": {
+            "1": "Pas du tout facile à mémoriser",
+            "2": "Un peu facile à mémoriser",
+            "3": "Moyennement facile à mémoriser",
+            "4": "Facile à mémoriser",
+            "5": "Très facile à mémoriser"
+          }
+        },
+        {
+          "id": "3",
+          "question": "Est-ce que votre logo de la coopérative est simple, distinctif et illustre spécifiquement les activités et les produits ?",
+          "options": {
+            "1": "Pas du tout simple et distinctif",
+            "2": "Un peu simple et distinctif",
+            "3": "Moyennement simple et distinctif",
+            "4": "Simple et distinctif",
+            "5": "Très simple, distinctif et représente bien les activités"
+          }
+        },
+        {
+          "id": "4",
+          "question": "Est-ce que le conditionnement de votre produit permet de protéger le produit ?",
+          "options": {
+            "1": "Pas du tout adapté",
+            "2": "Peu adapté",
+            "3": "Moyennement adapté",
+            "4": "Adapté",
+            "5": "Très bien adapté"
+          }
+        },
+        {
+          "id": "5",
+          "question": "Est-ce que l’étiquette de votre produit permet d'informer le consommateur sur les produits, de comparer les produits ?",
+          "options": {
+            "1": "Pas du tout informative",
+            "2": "Peu informative",
+            "3": "Moyennement informative",
+            "4": "Assez informative",
+            "5": "Très informative et comparatif"
+          }
+        },
+        {
+          "id": "6",
+          "question": "Votre emballage est-il adapté à la livraison ?",
+          "options": {
+            "1": "Pas du tout adapté",
+            "2": "Peu adapté",
+            "3": "Moyennement adapté",
+            "4": "Adapté",
+            "5": "Très bien adapté"
+          }
+        },
+        {
+          "id": "7",
+          "question": "Est-ce que vous essayez d’identifier le prix convenable pour chaque cible ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "8",
+          "question": "Avez-vous pris en considération le pouvoir d’achat des gens du village et des gens étrangers ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "9",
+          "question": "Est-ce que vous avez distribué vos produits aux plusieurs épiceries locales ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "10",
+          "question": "Combien de visiteurs votre site web reçoit-il mensuellement ?",
+          "options": {
+            "1": "Moins de 50",
+            "2": "50 - 200",
+            "3": "200 - 500",
+            "4": "500 - 1000",
+            "5": "Plus de 1000"
+          }
+        },
+        {
+          "id": "11",
+          "question": "Quel est votre taux de conversion (%) pour vos principaux objectifs digitaux ?",
+          "options": {
+            "1": "Moins de 1%",
+            "2": "1% - 3%",
+            "3": "3% - 7%",
+            "4": "7% - 15%",
+            "5": "Plus de 15%"
+          }
+        },
+        {
+          "id": "12",
+          "question": "Quel pourcentage de votre budget est alloué au marketing digital ?",
+          "options": {
+            "1": "Moins de 5%",
+            "2": "5% - 10%",
+            "3": "10% - 20%",
+            "4": "20% - 40%",
+            "5": "Plus de 40%"
+          }
+        }
+      ]
+    },
+    {
+      "Diagnostic Opérationnel - Gouvernance": [
+        {
+          "id": "G1",
+          "question": "Tenez-vous des réunions régulières ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Rarement",
+            "3": "De temps en temps",
+            "4": "Fréquemment",
+            "5": "Très fréquemment"
+          }
+        },
+        {
+          "id": "G2",
+          "question": "Y-a-t-il un règlement intérieur ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Partiellement",
+            "3": "Moyennement",
+            "4": "Oui, complet",
+            "5": "Oui, très détaillé"
+          }
+        },
+        {
+          "id": "G3",
+          "question": "Avez-vous des fiches de postes pour les membres ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Partiellement",
+            "3": "Moyennement",
+            "4": "Oui, mais pas détaillées",
+            "5": "Oui, très détaillées"
+          }
+        }
+      ]
+    },
+    {
+      "Diagnostic Opérationnel - Gestion administrative": [
+        {
+          "id": "A1",
+          "question": "Avez-vous des procédures internes ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Partiellement",
+            "3": "Moyennement",
+            "4": "Oui, bien établies",
+            "5": "Oui, très bien documentées"
+          }
+        },
+        {
+          "id": "A2",
+          "question": "Avez-vous un responsable administratif identifié ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Non, mais ça devrait être fait",
+            "3": "Oui, mais pas régulièrement impliqué",
+            "4": "Oui, très impliqué",
+            "5": "Oui, responsable et très impliqué"
+          }
+        },
+        {
+          "id": "A3",
+          "question": "Gardez-vous des justificatifs des dépenses de la coopérative ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Rarement",
+            "3": "Parfois",
+            "4": "Oui, régulièrement",
+            "5": "Oui, systématiquement"
+          }
+        }
+      ]
+    },
+    {
+      "Diagnostic Opérationnel - Gestion financière": [
+        {
+          "id": "F1",
+          "question": "Quel est le chiffre d'affaires annuel de la coopérative ?",
+          "options": {
+            "1": "Moins de 50 000 MAD",
+            "2": "50 000 - 100 000 MAD",
+            "3": "100 000 - 500 000 MAD",
+            "4": "500 000 - 1 000 000 MAD",
+            "5": "Plus de 1 000 000 MAD"
+          }
+        },
+        {
+          "id": "F2",
+          "question": "Quelle est la rentabilité nette de la coopérative (bénéfice / chiffre d'affaires) sur les 12 derniers mois ?",
+          "options": {
+            "1": "Moins de 1%",
+            "2": "1% - 3%",
+            "3": "3% - 10%",
+            "4": "10% - 20%",
+            "5": "Plus de 20%"
+          }
+        },
+        {
+          "id": "F3",
+          "question": "Quel est le montant de votre trésorerie disponible ?",
+          "options": {
+            "1": "Moins de 10 000 MAD",
+            "2": "10 000 - 50 000 MAD",
+            "3": "50 000 - 100 000 MAD",
+            "4": "100 000 - 500 000 MAD",
+            "5": "Plus de 500 000 MAD"
+          }
+        },
+        {
+          "id": "F4",
+          "question": "Comparez-vous régulièrement les prix de vente avec les coûts de production ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Rarement",
+            "3": "Parfois",
+            "4": "Fréquemment",
+            "5": "Toujours"
+          }
+        }
+      ]
+    },
+    {
+      "Diagnostic Opérationnel - Ressources humaines": [
+        {
+          "id": "HR1",
+          "question": "Disposez-vous des compétences nécessaires pour l'activité ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Partiellement",
+            "3": "Moyennement",
+            "4": "Oui, adéquates",
+            "5": "Oui, excellentes"
+          }
+        },
+        {
+          "id": "HR2",
+          "question": "Dans quelle mesure (1-5) les rôles et responsabilités sont-ils clairement définis ?",
+          "options": {
+            "1": "Pas du tout définis",
+            "2": "Peu définis",
+            "3": "Moyennement définis",
+            "4": "Bien définis",
+            "5": "Très clairement définis"
+          }
+        },
+        {
+          "id": "HR3",
+          "question": "À quel niveau (1-5) la coopérative investit-elle dans la formation des membres ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Faiblement",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        }
+      ]
+    },
+    {
+      "Diagnostic Stratégique": [
+        {
+          "id": "S1",
+          "question": "Connaissez-vous votre marché cible ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "S2",
+          "question": "Avez-vous effectué une analyse de marché ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Non, mais ça devrait être fait",
+            "3": "Oui, mais superficiellement",
+            "4": "Oui, de manière détaillée",
+            "5": "Oui, très détaillée et régulière"
+          }
+        },
+        {
+          "id": "S3",
+          "question": "Connaissez-vous vos principaux concurrents ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "S4",
+          "question": "Utilisez-vous des outils de diagnostic stratégique ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        },
+        {
+          "id": "S5",
+          "question": "Avez-vous une idée sur votre image de marque ?",
+          "options": {
+            "1": "Pas du tout claire",
+            "2": "Un peu claire",
+            "3": "Moyennement claire",
+            "4": "Bien définie",
+            "5": "Très claire et définie"
+          }
+        },
+        {
+          "id": "S6",
+          "question": "Cherchez-vous à établir des liens avec de nouveaux partenaires ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Rarement",
+            "3": "Parfois",
+            "4": "Fréquemment",
+            "5": "Toujours"
+          }
+        },
+        {
+          "id": "S7",
+          "question": "Connaissez-vous vos besoins en termes de ressources financières ?",
+          "options": {
+            "1": "Pas du tout",
+            "2": "Un peu",
+            "3": "Moyennement",
+            "4": "Bien",
+            "5": "Très bien"
+          }
+        }
+      ]
+    }
+  ],
+  "Scales": {
+    "GeneralInterpretation": [
+      {
+        "range": "1 - 1.5",
+        "interpretation": "Niveau très faible – Axe prioritaire à améliorer d'urgence."
+      },
+      {
+        "range": "1.6 - 2.5",
+        "interpretation": "Niveau faible – Besoin d’un accompagnement important."
+      },
+      {
+        "range": "2.6 - 3.5",
+        "interpretation": "Niveau moyen – Des efforts sont visibles, mais encore insuffisants."
+      },
+      {
+        "range": "3.6 - 4.5",
+        "interpretation": "Niveau bon – Bonne maîtrise, des ajustements légers suffisent."
+      },
+      {
+        "range": "4.6 - 5",
+        "interpretation": "Niveau très bon – L’axe est bien géré, à maintenir."
+      }
+    ],
+    "Axes": {
+      "Diagnostic Marketing": {
+        "sous_axes": [
+          "Publicité",
+          "Branding",
+          "Produit",
+          "Distribution",
+          "Marketing Digital"
+        ],
+        "recommendations": [
+          "1 et 2 : Focus sur la structuration de la stratégie marketing. Travail sur l'identité visuelle et la communication. Considérer des formations ou un consultant en marketing pour une approche plus ciblée.",
+          "3 : Des efforts sont notables, mais une analyse plus approfondie de l'impact des actions de marketing est nécessaire. Révision de la stratégie numérique, branding et évaluation des outils utilisés.",
+          "4 et 5 : Maintenir et améliorer la stratégie avec un suivi régulier des actions pour maximiser le rendement, notamment pour le marketing digital. Considérer une expansion de la présence en ligne."
+        ]
+      },
+      "Diagnostic Opérationnel": {
+        "sous_axes": [
+          "Gouvernance",
+          "Gestion Administrative",
+          "Gestion Financière",
+          "Ressources Humaines"
+        ],
+        "recommendations_summary": [
+          "Gouvernance : Mettre en place des réunions régulières, créer un règlement interne complet et définir clairement les rôles si score faible.",
+          "Gestion Administrative : Mettre en place des procédures internes détaillées et un suivi systématique des documents administratifs.",
+          "Gestion Financière : Travailler à une meilleure gestion budgétaire, établir des prévisions financières et surveiller régulièrement les flux de trésorerie.",
+          "Ressources Humaines : Créer des fiches de poste claires et un plan de formation pour le développement des compétences."
+        ]
+      },
+      "Diagnostic Stratégique": {
+        "sous_axes": [
+          "Connaissance du marché",
+          "Analyse concurrentielle",
+          "Stratégie de marque",
+          "Recherche de partenaires"
+        ],
+        "recommendations_summary": [
+          "1 et 2 : Effectuer une étude approfondie du marché et identifier les segments de clients clés.",
+          "3 : Renforcer l'analyse du marché avec plus de données client et une segmentation plus précise.",
+          "4 et 5 : Continuer à surveiller les tendances du marché et les attentes des consommateurs pour anticiper les évolutions."
+        ]
+      }
+    }
+  }
+}
