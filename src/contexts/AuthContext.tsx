@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { AuthUser } from "../types";
+import api from "../lib/api";
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -25,63 +32,46 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
 
-  // 🔹 Auto load user if email exists in localStorage
   useEffect(() => {
-    const storedData = localStorage.getItem("savedEmail44");
-    if (storedData) {
-      const { email, timestamp } = JSON.parse(storedData);
-      const now = Date.now();
-      const threeMonths = 1000 * 60 * 60 * 24 * 90; // 90 days
-
-      if (now - timestamp < threeMonths) {
-        // Auto-login user (simulate API validation)
-        if (email === "admin@admin.com") {
-          setUser({
-            id: "1",
-            name: "مدير النظام",
-            email,
-          });
+    const checkAuth = async () => {
+      try {
+        const res: any = await api.get("/users/me");
+        console.log("🚀 ~ checkAuth ~ res:", res);
+        if (res.user) {
+          setUser(res.user);
+        } else {
+          setUser(null);
         }
-      } else {
-        localStorage.removeItem("savedEmail");
+      } catch (error) {
+        setUser;
+        console.log("🚀 ~ checkAuth ~ error:", error);
       }
-    }else{
-         setUser({
-            id: "1",
-            name: "مدير النظام",
-            email:"admin@gmail.com",
-          });
-        
-    }
+    };
+    checkAuth();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call
-    if (email === "admin@admin.com" && password === "password") {
-      const authUser: AuthUser = {
-        id: "1",
-        name: "مدير النظام",
-        email,
-      };
-      setUser(authUser);
-
-      // Save email in localStorage with expiration
-      localStorage.setItem(
-        "savedEmail",
-        JSON.stringify({
-          email,
-          timestamp: Date.now(),
-        })
-      );
-
-      return true;
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; token: string }> => {
+    try {
+      const res: any = await api.post("/users/login", { email, password });
+      console.log("🚀 ~ login ~ res:", res);
+      if (res.status === 200 && res.user) {
+        const token = res.token;
+        setUser(res.user);
+        return { success: true, token };
+      }
+      return { success: false, token: "" };
+    } catch (error) {
+      console.log("🚀 ~ login ~ error:", error);
+      return { success: false, token: "" };
     }
-    return true;
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("savedEmail"); 
+    localStorage.removeItem("savedEmail");
   };
 
   const value = {

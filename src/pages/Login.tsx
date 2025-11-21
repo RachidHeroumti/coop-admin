@@ -5,6 +5,7 @@ import { useToast } from "../contexts/ToastContext";
 import { Input } from "../components/UI/Input";
 import { Button } from "../components/UI/Button";
 import { Pill } from "lucide-react";
+import Cookies from "js-cookie";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -18,18 +19,9 @@ export const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("savedEmail");
-    if (storedData) {
-      const { email, timestamp } = JSON.parse(storedData);
-      const now = Date.now();
-      const threeMonths = 1000 * 60 * 60 * 24 * 90; // 90 days in ms
-
-      if (now - timestamp < threeMonths) {
-        // ✅ Auto redirect if still valid
-        navigate("/dashboard", { replace: true });
-      } else {
-        localStorage.removeItem("savedEmail"); // expired
-      }
+    const token = Cookies.get("auth-token");
+    if (token) {
+      navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
 
@@ -76,17 +68,11 @@ export const Login: React.FC = () => {
     setErrors({});
 
     try {
-      const success = true;
-      // await login(formData.email, formData.password);
+
+      const {success ,token} = await login(formData.email, formData.password);
 
       if (success) {
-        localStorage.setItem(
-          "savedEmail",
-          JSON.stringify({
-            email: formData.email,
-            timestamp: Date.now(),
-          })
-        );
+        Cookies.set("auth-token", token);
 
         addToast("success", "Login successful!");
         navigate("/dashboard");

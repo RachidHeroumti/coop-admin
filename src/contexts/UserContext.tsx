@@ -1,11 +1,15 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { User } from '../types';
-import { v4 as uuidv4 } from 'uuid';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { User } from "../types";
+import { v4 as uuidv4 } from "uuid";
+import api from "../lib/api";
 
 interface UserContextType {
   users: User[];
-  addUser: (user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => boolean;
-  updateUser: (id: string, user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>) => boolean;
+  addUser: (user: Omit<User, "id" | "createdAt" | "updatedAt">) => boolean;
+  updateUser: (
+    id: string,
+    user: Omit<User, "id" | "createdAt" | "updatedAt">
+  ) => boolean;
   deleteUser: (id: string) => void;
   getUser: (id: string) => User | undefined;
 }
@@ -15,85 +19,98 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const useUser = () => {
   const context = useContext(UserContext);
   if (context === undefined) {
-    throw new Error('useUser must be used within a UserProvider');
+    throw new Error("useUser must be used within a UserProvider");
   }
   return context;
 };
 
-// Mock data
-const initialUsers: User[] = [
-  {
-    id: '1',
-    name: 'أحمد محمد',
-    email: 'ahmed.mohammed@example.com',
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-01')
-  },
-  {
-    id: '2',
-    name: 'فاطمة علي',
-    email: 'fatima.ali@example.com',
-    createdAt: new Date('2024-01-02'),
-    updatedAt: new Date('2024-01-02')
-  }
-];
+
 
 interface UserProviderProps {
   children: ReactNode;
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const [users, setUsers] = useState<User[]>(initialUsers);
+  const [users, setUsers] = useState<User[]>([]);
+  
 
-  const addUser = (userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): boolean => {
-    // Check for email uniqueness
-    if (users.some(user => user.email === userData.email)) {
-      return false;
+  const fetchUsers = async () => {
+    try {
+      const res: any = await api.get("/users");
+      if (res.status === 200 && res.users) {
+        setUsers(res.users);
+      }
+    } catch (error) {
+      console.log("🚀 ~ fetchUsers ~ error:", error);
     }
-
-    const newUser: User = {
-      ...userData,
-      id: uuidv4(),
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    setUsers(prev => [...prev, newUser]);
-    return true;
   };
 
-  const updateUser = (id: string, userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): boolean => {
-    // Check for email uniqueness (excluding current user)
-    if (users.some(user => user.email === userData.email && user.id !== id)) {
+  React.useEffect(() => {
+    fetchUsers();
+  }, []);
+
+
+  const addUser = (
+    userData: Omit<User, "id" | "createdAt" | "updatedAt">
+  ): boolean => {
+    try {
+      const res: any = api.post("/users/create", userData);
+      if (res.status === 200 && res.user) {
+        setUsers((prev) => [...prev, res.user]);
+      }
+      return true;
+    } catch (error) {
+      console.log("🚀 ~ addUser ~ error:", error);
       return false;
     }
+  };
 
-    setUsers(prev => prev.map(user => 
-      user.id === id 
-        ? { ...userData, id, createdAt: user.createdAt, updatedAt: new Date() }
-        : user
-    ));
-    return true;
+  const updateUser = (
+    id: string,
+    userData: Omit<User, "id" | "createdAt" | "updatedAt">
+  ): boolean => {
+    try {
+      const res: any = api.put(`/users/${id}`, userData);
+      if (res.status === 200 && res.user) {
+        setUsers((prev) =>
+          prev.map((user) => (user.id === id ? res.user : user))
+        );
+      }
+      return true;
+    } catch (error) {
+      console.log("🚀 ~ updateUser ~ error:", error);
+      return false;
+    }
   };
 
   const deleteUser = (id: string) => {
-    setUsers(prev => prev.filter(user => user.id !== id));
+    try {
+      const res: any = api.delete(`/users/${id}`);
+      if (res.status === 200) {
+        setUsers((prev) => prev.filter((user) => user.id !== id));
+      }
+    } catch (error) {
+      console.log("🚀 ~ deleteUser ~ error:", error);
+    }
   };
 
   const getUser = (id: string) => {
-    return users.find(user => user.id === id);
+    try {
+      const res: any = api.get(`/users/${id}`);
+      if (res.status === 200 && res.user) {
+        return res.user;
+      }
+    } catch (error) {
+      console.log("🚀 ~ getUser ~ error:", error);
+    }
   };
-
   const value = {
     users,
     addUser,
     updateUser,
     deleteUser,
-    getUser
+    getUser,
   };
 
-  return (
-    <UserContext.Provider value={value}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
