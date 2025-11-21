@@ -36,7 +36,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const checkAuth = async () => {
       try {
         const res: any = await api.get("/users/me");
-        console.log("🚀 ~ checkAuth ~ res:", res);
         if (res.user) {
           setUser(res.user);
         } else {

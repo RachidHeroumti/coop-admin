@@ -34,28 +34,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [users, setUsers] = useState<User[]>([]);
   
 
-  const fetchUsers = async () => {
-    try {
-      const res: any = await api.get("/users");
-      if (res.status === 200 && res.users) {
-        setUsers(res.users);
-      }
-    } catch (error) {
-      console.log("🚀 ~ fetchUsers ~ error:", error);
-    }
-  };
-
-  React.useEffect(() => {
-    fetchUsers();
-  }, []);
 
 
-  const addUser = (
+
+  const addUser = async(
     userData: Omit<User, "id" | "createdAt" | "updatedAt">
   ): boolean => {
     try {
-      const res: any = api.post("/users/create", userData);
-      if (res.status === 200 && res.user) {
+      const res: any = await api.post("/users/create", userData);
+      console.log("🚀 ~ addUser ~ res:", res)
+      
+      if (res.user) {
         setUsers((prev) => [...prev, res.user]);
       }
       return true;
@@ -65,12 +54,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
-  const updateUser = (
+  const updateUser =async (
     id: string,
     userData: Omit<User, "id" | "createdAt" | "updatedAt">
   ): boolean => {
     try {
-      const res: any = api.put(`/users/${id}`, userData);
+      const res: any =await api.put(`/users/${id}`, userData);
       if (res.status === 200 && res.user) {
         setUsers((prev) =>
           prev.map((user) => (user.id === id ? res.user : user))
@@ -83,9 +72,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
-  const deleteUser = (id: string) => {
+  const deleteUser =async (id: string) => {
     try {
-      const res: any = api.delete(`/users/${id}`);
+      const res: any =await api.delete(`/users/${id}`);
       if (res.status === 200) {
         setUsers((prev) => prev.filter((user) => user.id !== id));
       }
@@ -94,9 +83,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
-  const getUser = (id: string) => {
+  const getUser =async (id: string) => {
     try {
-      const res: any = api.get(`/users/${id}`);
+      const res: any =await api.get(`/users/${id}`);
       if (res.status === 200 && res.user) {
         return res.user;
       }

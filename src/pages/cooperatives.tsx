@@ -1,17 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Layout } from "../components/Layout";
 import { Table } from "../components/Shared/Table";
 import { Modal } from "../components/Shared/Modal";
 import { Input } from "../components/UI/Input";
 import { TextArea } from "../components/UI/TextArea";
 import { Button } from "../components/UI/Button";
-import { useCooperative } from "../contexts/CooperativeContext";
+import { useCooperative } from "../hooks/useCooperative";
 import { useToast } from "../contexts/ToastContext";
 import { Cooperative } from "../types";
 
 export const Cooperatives: React.FC = () => {
-  const { cooperatives, addCooperative, updateCooperative, deleteCooperative } =
-    useCooperative();
+  const {
+    addCooperative,
+    updateCooperative,
+    deleteCooperative,
+    fetchCooperatives,
+  } = useCooperative();
   const { addToast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCooperative, setEditingCooperative] =
@@ -25,19 +29,50 @@ export const Cooperatives: React.FC = () => {
     score: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [cooperatives, setCooperatives] = useState<Cooperative[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const columns = [
     { key: "name", title: "Name" },
     { key: "founder", title: "Founder" },
     { key: "phone", title: "Phone" },
-    { key: "address", title: "Address" },
-    { key: "score", title: "Score" },
     {
       key: "founded",
       title: "Founded",
-      render: (value: Date) => value.toLocaleDateString("en-US"),
+      render: (value: Date) => new Date(value).toLocaleDateString("en-US"),
     },
   ];
+
+
+  const loadCooperatives = useCallback(
+    async (page: number = 1, limit: number = 10) => {
+      setLoading(true);
+      try {
+        const { cooperatives: data, pagination } = await fetchCooperatives(
+          page,
+          limit
+        );
+        console.log("🚀 ~ loadCooperatives ~ data:", data);
+        setCooperatives(data);
+        setTotalPages(pagination.totalPages || 0);
+        setLimit(pagination.itemsPerPage || 10);
+        setPage(pagination.currentPage || 1);
+      } catch (error) {
+        console.log("🚀 ~ loadCooperatives ~ error:", error);
+        addToast("error", "Failed to load cooperatives");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [fetchCooperatives, addToast]
+  );
+
+  useEffect(() => {
+    loadCooperatives();
+  }, [loadCooperatives]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -116,14 +151,15 @@ export const Cooperatives: React.FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this cooperative?")) {
-      deleteCooperative(id);
+      await deleteCooperative(id);
       addToast("success", "Cooperative deleted successfully");
+      loadCooperatives(page, limit);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors = validate();
@@ -142,18 +178,23 @@ export const Cooperatives: React.FC = () => {
     };
 
     if (editingCooperative) {
-      const success = updateCooperative(editingCooperative.id, cooperativeData);
+      const success = await updateCooperative(
+        editingCooperative.id,
+        cooperativeData
+      );
       if (success) {
         addToast("success", "Cooperative updated successfully");
         setIsModalOpen(false);
         resetForm();
+        loadCooperatives(page, limit);
       }
     } else {
-      const success = addCooperative(cooperativeData);
+      const success = await addCooperative(cooperativeData);
       if (success) {
         addToast("success", "Cooperative added successfully");
         setIsModalOpen(false);
         resetForm();
+        loadCooperatives(page, limit);
       }
     }
   };
@@ -161,6 +202,10 @@ export const Cooperatives: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     resetForm();
+  };
+
+  const handlePageChange = (newPage: number) => {
+    loadCooperatives(newPage, limit);
   };
 
   return (
@@ -181,6 +226,12 @@ export const Cooperatives: React.FC = () => {
           onDelete={handleDelete}
           searchPlaceholder="Search cooperatives..."
           addButtonText="Add Cooperative"
+          loading={loading}
+          handlePageChange={handlePageChange}
+          page={page}
+          totalPages={totalPages}
+          limit={limit}
+          setLimit={setLimit}
         />
 
         <Modal

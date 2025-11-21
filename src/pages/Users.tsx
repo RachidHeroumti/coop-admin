@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Layout } from "../components/Layout";
 import { Table } from "../components/Shared/Table";
 import { Modal } from "../components/Shared/Modal";
@@ -7,24 +7,55 @@ import { Button } from "../components/UI/Button";
 import { useUser } from "../contexts/UserContext";
 import { useToast } from "../contexts/ToastContext";
 import { User } from "../types";
+import api from "../lib/api";
 
 export const Users: React.FC = () => {
-  const { users, addUser, updateUser, deleteUser } = useUser();
+  const { addUser, updateUser, deleteUser } = useUser();
   const { addToast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
+    phone: "",
+    role: "",
+    password: "",
   });
+  const [users, setUsers] = useState<User[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const columns = [
-    { key: "name", title: "Name" },
+    { key: "firstName", title: "First Name" },
+    { key: "lastName", title: "Last Name" },
     { key: "email", title: "Email" },
-    { key: "createdAt", title: "Created At" },
-    { key: "updatedAt", title: "Updated At" },
+    { key: "role", title: "Role" },
   ];
+  const fetchUsers = useCallback(
+    async (page: number = 1, limit: number = 10) => {
+      try {
+        const res: any = await api.get(`/users?limit=${limit}&page=${page}`);
+        console.log("🚀 ~ fetchUsers ~ res:", res);
+        if (res.users) {
+          setUsers(res.users);
+          setTotalPages(res.pagination.totalPages);
+          setLimit(res.pagination.itemsPerPage);
+          setPage(res.pagination.currentPage);
+        }
+      } catch (error) {
+        console.log("🚀 ~ fetchUsers ~ error:", error);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,8 +74,12 @@ export const Users: React.FC = () => {
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
     }
 
     if (!formData.email.trim()) {
@@ -53,13 +88,25 @@ export const Users: React.FC = () => {
       newErrors.email = "Invalid email format";
     }
 
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone is required";
+    }
+
+    if (!formData.role.trim()) {
+      newErrors.role = "Role is required";
+    }
+
     return newErrors;
   };
 
   const resetForm = () => {
     setFormData({
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
+      phone: "",
+      role: "",
+      password: "",
     });
     setErrors({});
     setEditingUser(null);
@@ -73,8 +120,12 @@ export const Users: React.FC = () => {
   const handleEdit = (user: User) => {
     setEditingUser(user);
     setFormData({
-      name: user.name,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
+      phone: user.phone,
+      role: user.role,
+      password: "",
     });
     setIsModalOpen(true);
   };
@@ -96,8 +147,11 @@ export const Users: React.FC = () => {
     }
 
     const userData = {
-      name: formData.name,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       email: formData.email,
+      phone: formData.phone,
+      role: formData.role,
     };
 
     if (editingUser) {
@@ -127,6 +181,9 @@ export const Users: React.FC = () => {
     setIsModalOpen(false);
     resetForm();
   };
+  const handlePageChange = (page: number) => {
+    fetchUsers(page, limit);
+  };
 
   return (
     <Layout>
@@ -146,6 +203,12 @@ export const Users: React.FC = () => {
           onDelete={handleDelete}
           searchPlaceholder="Search users..."
           addButtonText="Add User"
+          loading={loading}
+          handlePageChange={handlePageChange}
+          page={page}
+          totalPages={totalPages}
+          limit={limit}
+          setLimit={setLimit}
         />
 
         <Modal
@@ -154,14 +217,25 @@ export const Users: React.FC = () => {
           title={editingUser ? "Edit User" : "Add New User"}
         >
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              label="Full Name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              error={errors.name}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Input
+                label="First Name"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                required
+                error={errors.firstName}
+              />
+
+              <Input
+                label="Last Name"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                required
+                error={errors.lastName}
+              />
+            </div>
 
             <Input
               label="Email Address"
@@ -171,6 +245,35 @@ export const Users: React.FC = () => {
               onChange={handleInputChange}
               required
               error={errors.email}
+            />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              error={errors.password}
+            />
+
+            <Input
+              label="Phone Number"
+              name="phone"
+              type="tel"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+              error={errors.phone}
+            />
+
+            <Input
+              label="Role"
+              name="role"
+              value={formData.role}
+              onChange={handleInputChange}
+              required
+              error={errors.role}
+              placeholder="e.g., Admin, Manager, User"
             />
 
             <div className="flex justify-end space-x-3 pt-4">

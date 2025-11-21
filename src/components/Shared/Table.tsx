@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Edit2, Trash2, Plus } from "lucide-react";
+import { Search, Edit2, Trash2, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "../UI/Button";
 
 interface Column {
@@ -16,6 +16,12 @@ interface TableProps {
   onDelete: (id: string) => void;
   searchPlaceholder?: string;
   addButtonText?: string;
+  loading?: boolean;
+  handlePageChange?: (page: number) => void;
+  page?: number;
+  totalPages?: number;
+  limit?: number;
+  setLimit?: (limit: number) => void;
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -26,42 +32,34 @@ export const Table: React.FC<TableProps> = ({
   onDelete,
   searchPlaceholder = "Search...",
   addButtonText = "Add New",
+  loading,
+  handlePageChange,
+  page = 1,
+  totalPages = 1,
+  limit = 10,
+  setLimit,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   const filteredData = data.filter((item) =>
     columns.some((column) => {
       const value = item[column.key];
-      return (
-        value &&
-        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      return value?.toString().toLowerCase().includes(searchTerm.toLowerCase());
     })
   );
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedData = filteredData.slice(
-    startIndex,
-    startIndex + itemsPerPage
-  );
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const formatValue = (value: any): string => {
-    if (value instanceof Date) {
-      return value.toLocaleDateString("en-US");
-    }
+    if (value instanceof Date) return value.toLocaleDateString("en-US");
     return value?.toString() || "-";
   };
 
+  const startIndex = (page - 1) * limit;
+  const endIndex = Math.min(page * limit, filteredData.length);
+  const paginatedData = filteredData.slice(startIndex, endIndex);
+
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="p-4 border-b border-gray-200">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+      <div className="p-6 border-b border-gray-100">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -69,15 +67,12 @@ export const Table: React.FC<TableProps> = ({
               type="text"
               placeholder={searchPlaceholder}
               value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-4 py-2.5 w-full border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors"
             />
           </div>
-          <Button onClick={onAdd} variant="primary">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button onClick={onAdd} variant="primary" className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
             {addButtonText}
           </Button>
         </div>
@@ -90,23 +85,27 @@ export const Table: React.FC<TableProps> = ({
               {columns.map((column) => (
                 <th
                   key={column.key}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
                 >
                   {column.title}
                 </th>
               ))}
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-gray-100">
             {paginatedData.map((record, index) => (
-              <tr key={record.id || index} className="hover:bg-gray-50">
+              <tr key={record.id || index} className="hover:bg-gray-50 transition-colors">
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-left"
+                    className={`px-6 py-4 whitespace-nowrap text-sm ${
+                      column.key === "role" && record[column.key] === "admin"
+                        ? "text-red-600 font-medium uppercase"
+                        : "text-gray-900"
+                    }`}
                   >
                     {column.render
                       ? column.render(record[column.key], record)
@@ -114,17 +113,17 @@ export const Table: React.FC<TableProps> = ({
                   </td>
                 ))}
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <div className="flex justify-end space-x-2">
+                  <div className="flex justify-end gap-1">
                     <button
                       onClick={() => onEdit(record)}
-                      className="text-green-600 hover:text-green-900 p-1 rounded"
+                      className="p-2 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-colors"
                       title="Edit"
                     >
                       <Edit2 className="h-4 w-4" />
                     </button>
                     <button
                       onClick={() => onDelete(record.id)}
-                      className="text-red-600 hover:text-red-900 p-1 rounded"
+                      className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -137,30 +136,41 @@ export const Table: React.FC<TableProps> = ({
         </table>
       </div>
 
-      {totalPages > 1 && (
-        <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
-          <div className="text-sm text-gray-700">
-            Showing {startIndex + 1} to{" "}
-            {Math.min(startIndex + itemsPerPage, filteredData.length)} of{" "}
-            {filteredData.length} results
+      <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-gray-600">
+            Showing <span className="font-semibold">{startIndex + 1}</span> to{" "}
+            <span className="font-semibold">{endIndex}</span> of{" "}
+            <span className="font-semibold">{filteredData.length}</span> results
           </div>
-          <div className="flex space-x-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`px-3 py-2 text-sm rounded-md ${
-                  page === currentPage
-                    ? "bg-green-600 text-white"
-                    : "bg-white text-gray-700 hover:bg-gray-50 border border-gray-300"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
+          
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handlePageChange?.(page - 1)}
+              disabled={page <= 1}
+              className="p-2 border border-gray-300 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Previous page"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            
+            <div className="flex items-center gap-1">
+              <span className="px-3 py-1 text-sm font-medium text-gray-700">
+                Page {page} of {totalPages}
+              </span>
+            </div>
+            
+            <button
+              onClick={() => handlePageChange?.(page + 1)}
+              disabled={page >= totalPages}
+              className="p-2 border border-gray-300 rounded-lg hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title="Next page"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
